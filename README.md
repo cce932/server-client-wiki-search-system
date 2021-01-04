@@ -1,4 +1,8 @@
-### Getting Started Steps
+### A Java built GUI APP
+
+![](https://i.imgur.com/S5tH1Pa.png)
+
+### Getting Started
 
 1. Install python library
 ```cmd
@@ -18,3 +22,4 @@ javac Client.java
 java Server
 java Client
 ```
+
