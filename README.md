@@ -1,6 +1,6 @@
 ### A Java built GUI APP
 
-![](https://i.imgur.com/S5tH1Pa.png)
+![](https://i.imgur.com/qIyqkhE.png)
 
 ### Getting Started
 
