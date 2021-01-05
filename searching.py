@@ -41,6 +41,7 @@ def searchWIKI(keyword):
         else:
             return None
 
+# sys.argv[0] == ./searching.py
 key = transformKeyWord(sys.argv[1])
 content = searchWIKI(key) if key!=None else searchWIKI(sys.argv[1])
 content = re.sub(r'\[[^\]]*\]', '', content) if content!=None else content
