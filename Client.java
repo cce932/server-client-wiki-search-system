@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,7 +19,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import java.awt.*;
 
 public class Client extends JFrame {
@@ -43,6 +41,31 @@ public class Client extends JFrame {
     Scanner scanner;
     int port;
 
+    public static void main(String args[]) {
+        new Client("localhost", 20000);
+    }
+
+    public Client(String name, int p) {
+        super("WIKI Search");
+        serverName = name;
+        port = p;
+        try {
+            socket = new Socket(InetAddress.getByName(serverName), port);
+            output = new ObjectOutputStream(socket.getOutputStream());
+            output.flush();
+            input = new ObjectInputStream(socket.getInputStream());
+            System.out.println("create connect successful");
+        } catch (UnknownHostException x) {
+            x.printStackTrace();
+            close();
+        } catch (IOException x) {
+            x.printStackTrace();
+            close();
+        }
+
+        loadGUI();
+    }
+
     public void loadGUI() {
         Container cp = getContentPane();
         cp.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 20));
@@ -53,7 +76,6 @@ public class Client extends JFrame {
         searchBtn = new JButton("GO!");
         searchTf = new JTextField();
         searchTf.setColumns(10);
-        // searchTf.setSize(50, 20);
 
         resultLabel = new JLabel("Result:");
         resultTa = new JTextArea(10, 25);
@@ -70,16 +92,16 @@ public class Client extends JFrame {
             resultLabel.setText(searchInput + ":");
 
             try {
-                // pass the user's input to server
+                // Pass the user's input to server
                 output.writeObject(searchInput);
                 output.flush();
 
-                // server response
+                // Server response
                 result = (String) input.readObject();
                 resultTa.setText(result);
                 records.put(searchInput, result); // Add to Dictionary
 
-                // add result to searchRecord JList
+                // Add result to searchRecord JList
                 if (!listModel.contains(searchInput)) {
                     if (result.trim().contains("查無資料")) {
                         listModel.addElement(searchInput + " (查無資料)");
@@ -136,30 +158,5 @@ public class Client extends JFrame {
         } catch (IOException x) {
             x.printStackTrace();
         }
-    }
-
-    public Client(String name, int p) {
-        super("WIKI Search");
-        serverName = name;
-        port = p;
-        try {
-            socket = new Socket(InetAddress.getByName(serverName), port);
-            output = new ObjectOutputStream(socket.getOutputStream());
-            output.flush();
-            input = new ObjectInputStream(socket.getInputStream());
-            System.out.println("create connect successful");
-        } catch (UnknownHostException x) {
-            x.printStackTrace();
-            close();
-        } catch (IOException x) {
-            x.printStackTrace();
-            close();
-        }
-
-        loadGUI();
-    }
-
-    public static void main(String args[]) {
-        new Client("localhost", 20000);
     }
 }
