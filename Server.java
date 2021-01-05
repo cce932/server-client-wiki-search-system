@@ -55,8 +55,6 @@ public class Server extends Thread {
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
-            // output.writeObject(">>> Searching \"" + input + "\"...");
-            // output.flush();
 
             List<String> resultReader = readProcessOutput(process.getInputStream());
             resultReader.forEach(result -> {
@@ -66,7 +64,7 @@ public class Server extends Thread {
             
             // kill the process
             process.destroy();
-            // System.out.println(searchResult);
+
             return searchResult;
         }
         
@@ -80,14 +78,8 @@ public class Server extends Thread {
         public void run() {
             try {
                 while (true) {
-                    // output.writeObject(">>> Hi~ What do you want to search in wiki? (press 'q' to quit)");
-                    // output.flush();
                     String clientInput = (String) input.readObject(); // client pass in
-                    System.out.println("--- Input from client: " + clientInput);
-                    // if (clientInput.equals("q")) {
-                    //     close();
-                    //     break;
-                    // }
+                    System.out.println("\n--- Input from client: " + clientInput);
 
                     output.writeObject(searchInWiki(clientInput));
                     output.flush();
@@ -95,6 +87,7 @@ public class Server extends Thread {
                 }
             } catch (ClassNotFoundException x) {
                 x.printStackTrace();
+                close();
             } catch (IOException x) {
                 System.out.println(x);
                 close();
@@ -123,7 +116,7 @@ public class Server extends Thread {
         while (true) {
             try {
                 // connection
-                System.out.println("\nListening connections...");
+                System.out.println("Listening connections...");
                 Socket connSocket = serverSocket.accept();
                 if (connections.size() < maxiumConn) {
                     Connection connection = new Connection(connSocket);

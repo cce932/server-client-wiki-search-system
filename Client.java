@@ -5,12 +5,10 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Scanner;
 
-import javax.print.DocFlavor.STRING;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -52,7 +50,7 @@ public class Client extends JFrame {
         JPanel resultPanel = new JPanel(new BorderLayout());
         JPanel recordPanel = new JPanel(new BorderLayout());
 
-        searchBtn = new JButton("Search");
+        searchBtn = new JButton("GO!");
         searchTf = new JTextField();
         searchTf.setColumns(10);
         // searchTf.setSize(50, 20);
@@ -68,6 +66,7 @@ public class Client extends JFrame {
         searchBtn.addActionListener(e -> {
             result = "";
             searchInput = searchTf.getText();
+            searchTf.setText("");
             resultLabel.setText(searchInput + ":");
 
             try {
@@ -76,12 +75,24 @@ public class Client extends JFrame {
                 output.flush();
 
                 // server response
-                new MyThread().start();
+                result = (String) input.readObject();
+                resultTa.setText(result);
+                records.put(searchInput, result); // Add to Dictionary
 
+                // add result to searchRecord JList
+                if (!listModel.contains(searchInput)) {
+                    if (result.trim().contains("查無資料")) {
+                        listModel.addElement(searchInput + " (查無資料)");
+                    } else {
+                        listModel.addElement(searchInput);
+                    }
+                }
             } catch (IOException e1) {
                 e1.printStackTrace();
+                close();
             } catch (Exception e2) {
                 e2.printStackTrace();
+                close();
             }
         });
 
@@ -139,8 +150,10 @@ public class Client extends JFrame {
             System.out.println("create connect successful");
         } catch (UnknownHostException x) {
             x.printStackTrace();
+            close();
         } catch (IOException x) {
             x.printStackTrace();
+            close();
         }
 
         loadGUI();
@@ -152,19 +165,10 @@ public class Client extends JFrame {
     }
 
     class MyThread extends Thread {
-        private void sleep(int msec) {
-            try {
-                Thread.sleep(msec);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         @Override
         public void run() {
             super.run();
             try {
-                sleep(5000);
                 result = (String) input.readObject();
                 resultTa.setText(result);
                 records.put(searchInput, result); // Add to Dictionary
