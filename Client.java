@@ -160,29 +160,6 @@ public class Client extends JFrame {
     }
 
     public static void main(String args[]) {
-        Client client = new Client("localhost", 20000);
-        // client.exec();
-    }
-
-    class MyThread extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            try {
-                result = (String) input.readObject();
-                resultTa.setText(result);
-                records.put(searchInput, result); // Add to Dictionary
-                // add result to searchRecord JList
-                if (!listModel.contains(searchInput)) {
-                    if (result.trim().contains("查無資料")) {
-                        listModel.addElement(searchInput + " (查無資料)");
-                    } else {
-                        listModel.addElement(searchInput);
-                    }
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+        new Client("localhost", 20000);
     }
 }
