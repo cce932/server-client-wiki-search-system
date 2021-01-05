@@ -68,7 +68,7 @@ public class Server extends Thread {
             try {
                 input = new ObjectInputStream(socket.getInputStream());
                 output = new ObjectOutputStream(socket.getOutputStream());
-                System.out.println("Server connected successfully");
+                System.out.println("connected " + s.getPort() + " successfully");
             } catch (IOException x) {
                 x.printStackTrace();
             }
@@ -79,7 +79,7 @@ public class Server extends Thread {
             try {
                 while (true) {
                     String clientInput = (String) input.readObject(); // client pass in
-                    System.out.println("\n--- Input from client: " + clientInput);
+                    System.out.println("\n--- Input from client " + socket.getPort() + ": " + clientInput);
 
                     output.writeObject(searchWiki(clientInput));
                     output.flush();
@@ -125,7 +125,7 @@ public class Server extends Thread {
                 output.close();
                 socket.close();
                 connectionRemove(this);
-                System.out.println("connection is closed");
+                System.out.println("connection " + socket.getPort() + " is closed");
             } catch (IOException x) {
                 x.printStackTrace();
             }
