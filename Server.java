@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Server extends Thread {
+public class Server {
     List<Connection> connections;
     ServerSocket serverSocket;
     int port;
@@ -21,7 +21,7 @@ public class Server extends Thread {
 
     public static void main(String args[]) {
         Server server = new Server(20000, 100);
-        server.start();
+        server.run();
     }
 
     public Server(int p, int m) {
@@ -35,7 +35,6 @@ public class Server extends Thread {
         }
     }
 
-    @Override
     public void run() {
         while (true) {
             try {
@@ -70,6 +69,7 @@ public class Server extends Thread {
                 output = new ObjectOutputStream(socket.getOutputStream());
                 System.out.println("connected " + s.getPort() + " successfully");
             } catch (IOException x) {
+                close();
                 x.printStackTrace();
             }
         }
@@ -86,11 +86,11 @@ public class Server extends Thread {
                     searchResult = "";
                 }
             } catch (ClassNotFoundException x) {
+                close();
                 x.printStackTrace();
-                close();
             } catch (IOException x) {
-                System.out.println(x);
                 close();
+                System.out.println(x);
             }
         }
 

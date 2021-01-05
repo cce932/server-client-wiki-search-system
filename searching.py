@@ -5,7 +5,7 @@ import requests
 import re
 import sys
 
-def bot_get_google(question):
+def transformKeyWord(question):
     url = 'https://www.google.com.tw/search?q=' + question + '+維基百科'
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                              ' AppleWebKit/537.36 (KHTML, like Gecko)'
@@ -21,7 +21,7 @@ def bot_get_google(question):
     else:
         return None
 
-def bot_get_wiki(keyword):
+def searchWIKI(keyword):
     r = ""
     retry = 5
     if keyword:
@@ -41,8 +41,8 @@ def bot_get_wiki(keyword):
         else:
             return None
 
-key = bot_get_google(sys.argv[1])
-content = bot_get_wiki(key) if key!=None else bot_get_wiki(sys.argv[1])
+key = transformKeyWord(sys.argv[1])
+content = searchWIKI(key) if key!=None else searchWIKI(sys.argv[1])
 content = re.sub(r'\[[^\]]*\]', '', content) if content!=None else content
 result = '查無資料' if content==None else content
 
